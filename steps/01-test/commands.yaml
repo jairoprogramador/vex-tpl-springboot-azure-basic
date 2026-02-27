@@ -1,0 +1,5 @@
+- name: "maven verify"
+  description: "clean the previous build and run maven verify"
+  cmd: "mvn clean verify"
+  outputs: 
+    - probe: (?m)^.*BUILD SUCCESS.*

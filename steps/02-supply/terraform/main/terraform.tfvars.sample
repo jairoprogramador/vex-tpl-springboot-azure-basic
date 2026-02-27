@@ -1,0 +1,6 @@
+app_environment = "${var.environment}"
+app_project_name = "${var.project_name}"
+app_team_name = "${var.project_team}"
+azure_container_registry_rg = "${var.azure_container_registry_rg}"
+azure_container_registry_name = "${var.azure_container_registry_name}"
+azure_container_registry_login_server = "${var.azure_container_registry_login_server}"

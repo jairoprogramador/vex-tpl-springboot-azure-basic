@@ -1,0 +1,57 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${var.k8s_project_instance}-ingress
+  namespace: ${var.k8s_namespace}
+  labels:
+    app.kubernetes.io/name: ${var.project_name}
+    app.kubernetes.io/instance: ${var.k8s_project_instance}
+    app.kubernetes.io/version: ${var.project_revision}
+    app.kubernetes.io/part-of: ${var.project_organization}
+    app.kubernetes.io/managed-by: ${var.tool_name}
+    environment: ${var.environment}
+  annotations:
+    # TLS/SSL Configuration
+    cert-manager.io/cluster-issuer: ${var.ingress_cluster_issuer}
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+    # Proxy Configuration
+    nginx.ingress.kubernetes.io/proxy-body-size: "${var.ingress_proxy_body_size}"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "${var.ingress_proxy_read_timeout}"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "${var.ingress_proxy_send_timeout}"
+
+    # Rate Limiting
+    nginx.ingress.kubernetes.io/rate-limit: "${var.ingress_rate_limit}"
+    nginx.ingress.kubernetes.io/rate-limit-window: "${var.ingress_rate_limit_window}"
+
+    # Security Headers
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "Referrer-Policy: strict-origin-when-cross-origin";
+      more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains";
+    
+    # Performance y Cache (opcional)
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "${var.ingress_proxy_connect_timeout}"
+    
+    # Health checks y monitoring
+    nginx.ingress.kubernetes.io/upstream-vhost: ${var.k8s_ingress_host}
+spec:
+  ingressClassName: ${var.ingress_class_name}
+  tls:
+  - hosts:
+    - ${var.k8s_ingress_host}
+    secretName: ${var.k8s_project_instance}-tls
+  rules:
+  - host: ${var.k8s_ingress_host}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ${var.k8s_project_instance}-service
+            port:
+              number: ${var.k8s_service_port}

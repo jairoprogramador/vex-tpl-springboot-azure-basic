@@ -1,0 +1,7 @@
+- name: "azure_kubernetes_cluster_vm_size"
+  description: "size of the virtual machines for the nodes of the AKS cluster"
+  value: "standard_a4_v2"
+
+- name: "azure_kubernetes_cluster_node_count"
+  description: "Define the initial number of nodes in the default pool of the AKS cluster"
+  value: 2

@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${var.k8s_project_instance}-service
+  namespace: ${var.k8s_namespace}
+  labels:
+    app.kubernetes.io/name: ${var.project_name}
+    app.kubernetes.io/instance: ${var.k8s_project_instance}
+    app.kubernetes.io/version: ${var.project_revision}
+    app.kubernetes.io/part-of: ${var.project_organization}
+    app.kubernetes.io/managed-by: ${var.tool_name}
+    environment: ${var.environment}
+spec:
+  type: LoadBalancer
+  ports:
+  - port: ${var.k8s_service_port}
+    targetPort: ${var.container_port}
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/name: ${var.project_name}
+    app.kubernetes.io/part-of: ${var.project_organization}
+    environment: ${var.environment}

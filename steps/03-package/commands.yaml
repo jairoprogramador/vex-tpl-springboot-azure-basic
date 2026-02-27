@@ -1,0 +1,8 @@
+- name: "Login to Azure CLI"
+  description: "Configure login to Azure CLI"
+  cmd: "az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID"
+
+- name: "Build and push Docker image to ACR"
+  description: "Build the Docker image directly in ACR with multiple tags: version and latest. This avoids Docker socket permission issues."
+  cmd: "az acr build --registry ${var.azure_container_registry_name} --image ${var.project_name}:${var.project_version} --image ${var.project_name}:${var.project_revision} --image ${var.project_name}:latest --file ${var.step_workdir}/docker/Dockerfile ${var.project_workdir}"
+

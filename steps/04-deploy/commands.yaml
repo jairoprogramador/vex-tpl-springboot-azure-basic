@@ -1,0 +1,37 @@
+- name: "Login to Azure CLI"
+  description: "Configure login to Azure CLI"
+  cmd: "az login --service-principal --username $ARM_CLIENT_ID --password $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID"
+
+- name: "Configure credentials to AKS"
+  description: "Configure login to AKS"
+  cmd: "az aks get-credentials --resource-group ${var.azure_resource_group_name} --name ${var.azure_kubernetes_cluster_name} --overwrite-existing"
+
+- name: "Configure credentials with kubelogin"
+  description: "Configure login with kubelogin"
+  cmd: "kubelogin convert-kubeconfig -l azurecli"
+
+- name: "Create Kubernetes namespace"
+  description: "create the Kubernetes namespace if it does not exist"
+  cmd: "kubectl create namespace ${var.k8s_namespace} --dry-run=client -o yaml | kubectl apply -f -"
+
+- name: "Apply Kubernetes manifests"
+  description: "apply the Kubernetes manifests to the existing cluster"
+  cmd: "kubectl apply -f ."
+  workdir: "./k8s"
+  templates:
+    - "deployment.yaml"
+    - "ingress.yaml"
+    - "resourcequota.yaml"
+    - "service.yaml"
+
+- name: "Verify deployment"
+  description: "verify that the deployment has completed successfully"
+  cmd: "kubectl rollout status deployment/${var.k8s_project_instance} --namespace ${var.k8s_namespace} --timeout=300s"
+
+- name: "Verify pods"
+  description: "verify the status of the pods of the application"
+  cmd: "kubectl get pods --namespace ${var.k8s_namespace} -l app.kubernetes.io/name=${var.project_name},environment=${var.environment}"
+
+- name: "Verify services"
+  description: "verify that the services are working correctly"
+  cmd: "kubectl get services --namespace ${var.k8s_namespace} -l app.kubernetes.io/name=${var.project_name},environment=${var.environment}"

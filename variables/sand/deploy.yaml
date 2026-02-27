@@ -1,0 +1,150 @@
+- name: "container_port"
+  description: "port for the spring application"
+  value: "8080"
+
+- name: "k8s_service_port"
+  description: "port for the kubernetes service"
+  value: "80"
+
+# Ingress variables
+- name: "ingress_class_name"
+  description: "ingress class name for the ingress controller"
+  value: "nginx"
+
+- name: "ingress_cluster_issuer"
+  description: "cert-manager cluster issuer for SSL certificates"
+  value: "letsencrypt-staging"
+
+- name: "ingress_proxy_body_size"
+  description: "maximum request body size for nginx ingress"
+  value: "2m"
+
+- name: "ingress_proxy_read_timeout"
+  description: "proxy read timeout for nginx ingress"
+  value: "15"
+
+- name: "ingress_proxy_send_timeout"
+  description: "proxy send timeout for nginx ingress"
+  value: "15"
+
+- name: "ingress_rate_limit"
+  description: "rate limit requests per minute for nginx ingress"
+  value: "20"
+
+- name: "ingress_rate_limit_window"
+  description: "rate limit window in minutes for nginx ingress"
+  value: "1"
+
+- name: "ingress_proxy_connect_timeout"
+  description: "proxy connection timeout in seconds for nginx ingress"
+  value: "5"
+
+# Deployment variables
+- name: "k8s_memory_request"
+  description: "memory request for the kubernetes deployment"
+  value: "512Mi"
+
+- name: "k8s_cpu_request"
+  description: "cpu request for the kubernetes deployment"
+  value: "250m"
+
+- name: "k8s_memory_limit"
+  description: "memory limit for the kubernetes deployment"
+  value: "1Gi"
+
+- name: "k8s_cpu_limit"
+  description: "cpu limit for the kubernetes deployment"
+  value: "500m"
+
+- name: "k8s_replicas"
+  description: "replicas for the kubernetes deployment"
+  value: "1"
+
+- name: "k8s_initial_liveness"
+  description: "initial liveness for the kubernetes deployment"
+  value: "30"
+
+- name: "k8s_period_liveness"
+  description: "period liveness for the kubernetes deployment"
+  value: "15"
+
+- name: "k8s_timeout_liveness"
+  description: "timeout liveness for the kubernetes deployment"
+  value: "5"
+
+- name: "k8s_failure_liveness"
+  description: "failure threshold liveness for the kubernetes deployment"
+  value: "3"
+
+- name: "k8s_initial_readiness"
+  description: "initial readiness for the kubernetes deployment"
+  value: "10"
+
+- name: "k8s_period_readiness"
+  description: "period readiness for the kubernetes deployment"
+  value: "5"
+
+- name: "k8s_timeout_readiness"
+  description: "timeout readiness for the kubernetes deployment"
+  value: "3"
+
+- name: "k8s_failure_readiness"
+  description: "failure threshold readiness for the kubernetes deployment"
+  value: "2"
+
+- name: "k8s_max_unavailable"
+  description: "max unavailable pods during rolling update"
+  value: "1"
+
+- name: "k8s_max_surge"
+  description: "max surge pods during rolling update"
+  value: "0"
+
+- name: "k8s_min_ready_seconds"
+  description: "minimum seconds a pod must be ready before considered available"
+  value: "10"
+
+# ResourceQuota variables
+- name: "k8s_quota_requests_memory"
+  description: "total memory requests allowed in namespace"
+  value: "1Gi"
+
+- name: "k8s_quota_requests_cpu"
+  description: "total cpu requests allowed in namespace"
+  value: "500m"
+
+- name: "k8s_quota_limits_memory"
+  description: "total memory limits allowed in namespace"
+  value: "2Gi"
+
+- name: "k8s_quota_limits_cpu"
+  description: "total cpu limits allowed in namespace"
+  value: "1"
+
+- name: "k8s_quota_pods"
+  description: "maximum number of pods allowed in namespace"
+  value: "2"
+
+- name: "k8s_quota_services"
+  description: "maximum number of services allowed in namespace"
+  value: "3"
+
+- name: "k8s_quota_pvc"
+  description: "maximum number of persistent volume claims allowed in namespace"
+  value: "1"
+
+- name: "k8s_quota_storage"
+  description: "total storage requests allowed in namespace"
+  value: "5Gi"
+
+- name: "k8s_project_instance"
+  description: "name base of Kubernetes composed by the project name, id and environment"
+  value: ${var.project_name}${var.project_id}-${var.environment}
+
+- name: "k8s_namespace"
+  description: "namespace of Kubernetes composed by the project name and the team"
+  value: ${var.k8s_project_instance}-${var.project_team}
+
+- name: "k8s_ingress_host"
+  description: "host domain for the ingress (FQDN of the AKS cluster)"
+  value: "${var.azure_kubernetes_cluster_fqdn}"

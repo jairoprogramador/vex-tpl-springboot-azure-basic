@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${var.k8s_project_instance}
+  namespace: ${var.k8s_namespace}
+  labels:
+    app.kubernetes.io/name: ${var.project_name}
+    app.kubernetes.io/instance: ${var.k8s_project_instance}
+    app.kubernetes.io/version: ${var.project_revision}
+    app.kubernetes.io/part-of: ${var.project_organization}
+    app.kubernetes.io/managed-by: ${var.tool_name}
+    environment: ${var.environment}
+
+spec:
+  replicas: ${var.k8s_replicas}
+  minReadySeconds: ${var.k8s_min_ready_seconds}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: ${var.k8s_max_unavailable}
+      maxSurge: ${var.k8s_max_surge}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ${var.project_name}
+      app.kubernetes.io/part-of: ${var.project_organization}
+      environment: ${var.environment}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ${var.project_name}
+        app.kubernetes.io/part-of: ${var.project_organization}
+        environment: ${var.environment}
+    spec:
+      containers:
+      - name: ${var.k8s_project_instance}
+        image: ${var.azure_container_registry_login_server}/${var.project_name}:${var.project_version}
+        ports:
+        - containerPort: ${var.container_port}
+        resources:
+          requests:
+            memory: ${var.k8s_memory_request}
+            cpu: ${var.k8s_cpu_request}
+          limits:
+            memory: ${var.k8s_memory_limit}
+            cpu: ${var.k8s_cpu_limit}
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: ${var.container_port}
+          initialDelaySeconds: ${var.k8s_initial_liveness}
+          periodSeconds: ${var.k8s_period_liveness}
+          timeoutSeconds: ${var.k8s_timeout_liveness}
+          failureThreshold: ${var.k8s_failure_liveness}
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: ${var.container_port}
+          initialDelaySeconds: ${var.k8s_initial_readiness}
+          periodSeconds: ${var.k8s_period_readiness}
+          timeoutSeconds: ${var.k8s_timeout_readiness}
+          failureThreshold: ${var.k8s_failure_readiness}
