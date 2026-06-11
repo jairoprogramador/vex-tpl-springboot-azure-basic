@@ -1,6 +1,6 @@
 - name: "Init terraform shared"
   description: "prepare the terraform working for the shared resources, downloading the providers and configuring the backend state"
-  cmd: "terraform init -backend-config=\"resource_group_name=$TF_STATE_RESOURCE_GROUP\" -backend-config=\"storage_account_name=$TF_STATE_STORAGE_ACCOUNT\" -backend-config=\"container_name=$TF_STATE_CONTAINER\" -backend-config=\"key=${var.project_id}/shared.tfstate\""
+  cmd: "terraform init -backend-config=\"resource_group_name=$TF_STATE_RESOURCE_GROUP\" -backend-config=\"storage_account_name=$TF_STATE_STORAGE_ACCOUNT\" -backend-config=\"container_name=$TF_STATE_CONTAINER\" -backend-config=\"key=${var.project_id}/shared.tfstate\" -backend-config=\"use_azuread_auth=true\""
   workdir: "./terraform/shared"
 
 - name: "Plan terraform shared"
@@ -27,7 +27,7 @@
 
 - name: "Init terraform"
   description: "prepare the terraform working environment, downloading the providers and configuring the backend state"
-  cmd: "terraform init -backend-config=\"resource_group_name=$TF_STATE_RESOURCE_GROUP\" -backend-config=\"storage_account_name=$TF_STATE_STORAGE_ACCOUNT\" -backend-config=\"container_name=$TF_STATE_CONTAINER\" -backend-config=\"key=${var.project_id}/${var.environment}/main.tfstate\""
+  cmd: "terraform init -backend-config=\"resource_group_name=$TF_STATE_RESOURCE_GROUP\" -backend-config=\"storage_account_name=$TF_STATE_STORAGE_ACCOUNT\" -backend-config=\"container_name=$TF_STATE_CONTAINER\" -backend-config=\"key=${var.project_id}/${var.environment}/main.tfstate\" -backend-config=\"use_azuread_auth=true\""
   workdir: "./terraform/main"
 
 - name: "Plan terraform"
