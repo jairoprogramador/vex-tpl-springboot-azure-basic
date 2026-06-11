@@ -103,7 +103,7 @@ variable "azure_kubernetes_cluster_node_count" {
 variable "azure_kubernetes_cluster_vm_size" {
   description = "Define the size of the virtual machines for the nodes of the AKS cluster"
   type        = string
-  default     = "Standard_B2ms"
+  default     = "standard_d2s_v3"
 }
 
 variable "azure_dns_prefix_aks" {
