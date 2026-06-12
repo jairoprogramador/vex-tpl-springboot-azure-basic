@@ -35,3 +35,8 @@
 - name: "Verify services"
   description: "verify that the services are working correctly"
   cmd: "kubectl get services --namespace ${var.k8s_namespace} -l app.kubernetes.io/name=${var.project_name},environment=${var.environment}"
+
+- name: "Show service IP"
+  description: "display the external IP where the service was deployed"
+  show: true
+  cmd: "kubectl get services --namespace ${var.k8s_namespace} -l app.kubernetes.io/name=${var.project_name},environment=${var.environment} -o jsonpath='{.items[0].status.loadBalancer.ingress[0].ip}'"
