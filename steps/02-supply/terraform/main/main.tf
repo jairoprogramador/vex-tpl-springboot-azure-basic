@@ -32,6 +32,7 @@ resource "azurerm_kubernetes_cluster" "main" {
 
   local_account_disabled = true
   azure_policy_enabled = true
+  oidc_issuer_enabled = true
 
   azure_active_directory_role_based_access_control {
     tenant_id = data.azuread_client_config.current.tenant_id
