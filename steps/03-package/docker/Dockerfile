@@ -1,4 +1,4 @@
-FROM maven:3.9.9-eclipse-temurin-17-alpine AS builder
+FROM ${var.azure_container_registry_login_server}/library/maven:3.9.9-eclipse-temurin-17-alpine AS builder
 
 #RUN apk add --no-cache maven
 
@@ -16,7 +16,7 @@ COPY --chown=appuser:appgroup src ./src
 
 RUN mvn clean package -DskipTests=true
 
-FROM eclipse-temurin:17-jre-alpine
+FROM ${var.azure_container_registry_login_server}/library/eclipse-temurin:17-jre-alpine
 
 RUN apk update && apk upgrade && \
     apk add --no-cache curl && \

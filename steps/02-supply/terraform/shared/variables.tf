@@ -11,6 +11,12 @@ variable "azure_acr_name" {
   default     = "vexacr"
 }
 
+variable "azure_key_vault_name" {
+  description = "Define the base name of the Key Vault that stores the Docker Hub credentials for the ACR cache (a random suffix is appended)"
+  type        = string
+  default     = "vexkv"
+}
+
 variable "azure_location" {
   description = "Define the region of Azure where the resources will be deployed"
   type        = string
@@ -31,4 +37,16 @@ variable "azure_resource_tags" {
     create_by    = "vex"
     lifecycle    = "ephemeral"
   }
+}
+
+variable "dockerhub_username" {
+  description = "Docker Hub username of the Vex-owned puller account, used by the ACR cache credential set to authenticate base-image pulls"
+  type        = string
+  sensitive   = true
+}
+
+variable "dockerhub_token" {
+  description = "Docker Hub access token (read-only) paired with dockerhub_username for the ACR cache credential set"
+  type        = string
+  sensitive   = true
 }

@@ -12,4 +12,11 @@ resource "random_id" "acr_name" {
   byte_length = 8
 }
 
+resource "random_id" "key_vault" {
+  keepers = {
+    value = var.azure_key_vault_name
+  }
+  byte_length = 8
+}
+
 
