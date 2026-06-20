@@ -5,4 +5,6 @@
 - name: "Build and push Docker image to ACR"
   description: "Build the Docker image directly in ACR with multiple tags: version and latest. This avoids Docker socket permission issues."
   cmd: "az acr build --registry ${var.azure_container_registry_name} --image ${var.project_name}:${var.project_version} --image ${var.project_name}:${var.project_revision} --image ${var.project_name}:latest --file ${var.step_workdir}/docker/Dockerfile ${var.project_workdir}"
+  templates:
+    - "docker/Dockerfile"
 

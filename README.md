@@ -48,6 +48,30 @@ Centralizamos toda la lógica de despliegue —desde la verificación de herrami
     *   Continúa con `02-supply`, `03-package`, y así sucesivamente, pasando las variables generadas entre pasos.
 4.  **Reporta el Resultado:** Informa al usuario si el despliegue fue un éxito o si falló en algún punto, proporcionando contexto claro.
 
+## Requisitos de Plataforma (ACR Cache / Docker Hub)
+
+El paso `03-package` construye la imagen con `az acr build`, que descarga las imágenes
+base (`maven`, `eclipse-temurin`) desde Docker Hub. Para evitar el rate limit anónimo
+(`toomanyrequests`), esta plantilla usa **ACR Cache (pull-through) autenticado**:
+
+*   `02-supply` (`terraform/shared/acr_cache.tf`) provisiona un Key Vault, un
+    `credential_set` y una `cache_rule` (`docker.io/library/*` → `library/*`) sobre un ACR
+    **SKU Standard** (Cache no funciona en Basic).
+*   El `Dockerfile` referencia `${var.azure_container_registry_login_server}/library/...`
+    en lugar de Docker Hub directo (el `FROM` se interpola vía `templates`).
+
+Esto requiere dos secretos **provistos por la plataforma Vex**, no por el usuario:
+
+| Variable Terraform | Origen |
+|---|---|
+| `dockerhub_username` | Inyectada como `TF_VAR_dockerhub_username` por el backend del portal |
+| `dockerhub_token`    | Inyectada como `TF_VAR_dockerhub_token` (token read-only de una cuenta Docker Hub de Vex) |
+
+**Convenio de opt-in:** la plataforma inyecta estas `TF_VAR_*` en todos los despliegues;
+un pipeline las usa solo si **declara** las variables `dockerhub_username`/`dockerhub_token`
+en su `variables.tf` (Terraform ignora las `TF_VAR_*` no declaradas). Pipelines que no
+empaquetan vía ACR simplemente no las declaran.
+
 ## Empieza a Construir tu Propia Plantilla
 
 Usa `mydeploy` como punto de partida. Fórkalo, adáptalo a tus tecnologías y empieza a construir una cultura de despliegues estandarizados en tu organización.

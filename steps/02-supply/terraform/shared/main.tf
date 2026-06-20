@@ -8,7 +8,7 @@ resource "azurerm_container_registry" "main" {
   name                = "${local.names.app_rm_acr_name}"
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
-  sku                 = "Basic"
+  sku                 = "Standard" # ACR Cache (pull-through) requiere Standard o Premium
   admin_enabled       = false
   tags                = var.azure_resource_tags
   
