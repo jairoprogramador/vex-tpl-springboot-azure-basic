@@ -21,7 +21,7 @@ resource "azurerm_key_vault_access_policy" "deployer" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = data.azurerm_client_config.current.object_id
 
-  secret_permissions = ["Get", "Set", "Purge", "Recover"]
+  secret_permissions = ["Get", "List", "Set", "Delete", "Purge", "Recover"]
 }
 
 resource "azurerm_key_vault_secret" "dockerhub_username" {
