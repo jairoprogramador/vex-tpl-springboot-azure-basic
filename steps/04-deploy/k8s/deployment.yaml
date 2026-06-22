@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: ${var.k8s_project_instance}
-        image: ${var.azure_container_registry_login_server}/${var.project_name}:${var.project_version}
+        image: ${var.azure_container_registry_login_server}/${var.project_name}:${var.project_revision}
         ports:
         - containerPort: ${var.container_port}
         resources:
